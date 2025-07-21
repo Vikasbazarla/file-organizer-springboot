@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Organizer Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg-light: #f8f9fa;
+            --bg-dark: #1e1e2f;
+            --text-light: #000;
+            --text-dark: #fff;
+            --card-light: #fff;
+            --card-dark: #2c2c3e;
+            --accent: #4f46e5;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar input {
+            width: 60%;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        .toggle-mode {
+            background-color: transparent;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 10px;
+            color: var(--accent);
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .file-card {
+            background-color: var(--card-light);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            word-wrap: break-word;
+        }
+
+        .dark-mode .file-card {
+            background-color: var(--card-dark);
+        }
+
+        .file-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .file-icon {
+            font-size: 32px;
+            color: var(--accent);
+        }
+
+        .file-name {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .file-tags {
+            font-size: 13px;
+            color: #777;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        .actions a {
+            color: #e63946;
+            text-decoration: none;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .upload-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--accent);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .upload-btn:hover {
+            background-color: #3b39ca;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="top-bar">
+        <h1>File Organizer</h1>
+        <button class="toggle-mode" onclick="toggleMode()">🌙 Toggle</button>
+    </div>
+
+    <div class="search-bar">
+        <form action="/search" method="get">
+            <input type="text" name="tag" placeholder="🔍 Search by tag">
+        </form>
+    </div>
+
+    <div class="file-grid">
+        <div th:each="file : ${files}" class="file-card">
+            <div class="file-icon">📄</div>
+            <div class="file-name" th:text="${file.fileName}">filename.pdf</div>
+            <div class="file-tags" th:text="${file.tags}">tags</div>
+            <div class="actions">
+                <a th:href="@{/download/{id}(id=${file.id})}">Download</a>
+                <a th:href="@{/delete/{id}(id=${file.id})}">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload button with file input -->
+<form id="uploadForm" method="post" action="/upload" enctype="multipart/form-data">
+    <input type="file" id="fileInput" name="file" onchange="document.getElementById('uploadForm').submit();">
+    <input type="hidden" name="tags" value="">
+    <button type="button" class="upload-btn" onclick="document.getElementById('fileInput').click()">⬆️ Upload</button>
+</form>
+
+<script>
+    function toggleMode() {
+        document.body.classList.toggle("dark-mode");
+    }
+</script>
+</body>
+</html>

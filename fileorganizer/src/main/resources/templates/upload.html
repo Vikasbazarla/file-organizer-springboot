@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload File</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background-color: #f4f4f4;
+        }
+
+        .upload-box {
+            background: white;
+            padding: 2rem;
+            max-width: 500px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input[type="file"],
+        input[type="text"] {
+            width: 100%;
+            padding: 0.7rem;
+            margin-top: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 1.5rem;
+            padding: 0.7rem 2rem;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-top: 1rem;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<div class="upload-box">
+    <h2>Upload File</h2>
+
+    <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+        <label for="file">Select file:</label>
+        <input type="file" name="file" id="file" required>
+
+        <label for="tags">Enter tags (comma-separated):</label>
+        <input type="text" name="tags" id="tags" placeholder="e.g. project, java, report" required>
+
+        <button type="submit">Upload</button>
+    </form>
+
+    <div class="message" th:if="${message}">
+        <p th:text="${message}"></p>
+    </div>
+
+    <a th:href="@{/dashboard}" style="display: inline-block; margin-top: 1rem;">Back to Dashboard</a>
+</div>
+
+</body>
+</html>
